@@ -1,1 +1,0 @@
-Car{ID=1, mileage=250321, fuelType='diesel', wheelsNumber=4, engineCapacity=1000, vehicleBrand='bmw', lastInspectionDate=2024-06-06}
