@@ -16,8 +16,4 @@ public class Car extends Vehicle {
             return super.isInspectionNeeded();
         }
     }
-
-    public boolean isTirePressureLow() {
-        return getMileage() > 20000;
-    }
 }

@@ -10,14 +10,10 @@ public class Motorcycle extends Vehicle {
 
     @Override
     public boolean isInspectionNeeded() {
-        if (getEngineCapacity() > 300) {
+        if (getEngine().getCapacity() > 300) {
             return getMileage() > 5000;
         } else {
             return super.isInspectionNeeded();
         }
-    }
-
-    public boolean isChainGreaseNeeded() {
-        return getMileage() > 5000;
     }
 }

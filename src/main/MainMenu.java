@@ -2,6 +2,7 @@ package main;
 
 import utils.Helpers;
 import utils.Database;
+
 import vehicles.Car;
 import vehicles.Vehicle;
 import vehicles.Motorcycle;
@@ -9,10 +10,12 @@ import vehicles.Motorcycle;
 import java.time.LocalDate;
 
 import static utils.Utils.*;
+import static utils.Helpers.getVehicleById;
+import static utils.Settings.setCurrentMenu;
 import static utils.Settings.getTxtExportFilepath;
 import static utils.Database.exportDatabaseToTxtFile;
 
-public class Interface {
+public class MainMenu {
 
     public static void chooseCommand() {
         String command = getStringInput(showCommands());
@@ -23,8 +26,17 @@ public class Interface {
             case "view":
                 viewAllVehicles();
                 break;
-            case "check":
-                checkIfMaintenanceNeeded();
+            case "details":
+                showDetailedVehicleInfo();
+                break;
+            case "simulation":
+                goToSimulationMenu();
+                break;
+            case "workshop":
+                goToWorkshopMenu();
+                break;
+            case "history":
+                goToHistoryReportMenu();
                 break;
             case "export":
                 exportDatabaseToTxtFile(getTxtExportFilepath());
@@ -42,14 +54,17 @@ public class Interface {
                 Available commands:
                 Add - add a new vehicle to the database
                 View - show all information about vehicles from database
-                Check - check if a specified vehicle requires maintenance
-                Export - export vehicles database to a text file
+                Details - view detailed info about chosen vehicle
+                Simulation - open simulation menu
+                Workshop - open workshop menu
+                History - go to vehicle history report menu
+                Export - export list of all vehicles to a text file
                 Exit - save vehicles and exit the program""";
     }
 
     private static void addVehicle() {
         long vehicleID = Database.getNumberOfItemsInDB() + 1;
-        String vehicleType = Helpers.getVehicleTypeInput(Vehicle.getVehicleTypes(), "Is your vehicle a car or a motorcycle?").toLowerCase();
+        String vehicleType = Helpers.getVehicleTypeInput("Is your vehicle a car or a motorcycle?").toLowerCase();
         String brand = getStringInput("What is your " + vehicleType + "'s brand?");
         int wheelsNumber = getPositiveIntInput("How many wheels does your " + vehicleType + " have?");
         int engineCapacity = getPositiveIntInput("What is the engine's capacity?");
@@ -78,32 +93,26 @@ public class Interface {
         }
     }
 
-    private static void checkIfMaintenanceNeeded() {
-        int vehicleID = getPositiveIntInput("Select the vehicle to check by its' ID:");
-        Vehicle vehicle;
-
-        if (vehicleID <= Database.getNumberOfItemsInDB() && vehicleID > 0) {
-            vehicle = Database.getVehicleObjects().get(vehicleID - 1);
-        } else {
-            System.out.println("Vehicle with this ID does not exist in the database.");
-            return;
-        }
-
-        if (vehicle.isInspectionNeeded()) {
-            System.out.println("WARNING! Vehicle inspection is required");
-        }
-        if (vehicle instanceof Car) {
-            if (((Car) vehicle).isTirePressureLow()) {
-                System.out.println("WARNING! Tire pressure is too low!");
-            }
-        } else if (vehicle instanceof Motorcycle) {
-            if (((Motorcycle) vehicle).isChainGreaseNeeded()) {
-                System.out.println("WARNING! Chain needs lubricating!");
-            }
-        }
+    private static void goToSimulationMenu() {
+        setCurrentMenu("simulation");
     }
 
-    public static void saveAndExit() {
+    private static void goToWorkshopMenu() {
+        setCurrentMenu("workshop");
+    }
+
+    private static void goToHistoryReportMenu() {
+        setCurrentMenu("history");
+    }
+
+    private static void showDetailedVehicleInfo() {
+        Vehicle vehicle = getVehicleById();
+
+        System.out.println(vehicle.getVehicleCondition());
+        System.out.println(vehicle);
+    }
+
+    private static void saveAndExit() {
         Database.serializeVehicleObjects();
         System.exit(0);
     }

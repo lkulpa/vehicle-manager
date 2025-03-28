@@ -1,6 +1,7 @@
 package main;
 
 import utils.Database;
+import utils.Settings;
 
 public class Main {
 
@@ -9,7 +10,12 @@ public class Main {
         Database.deserializeVehicleObjects();
 
         while (true) {
-            Interface.chooseCommand();
+            switch (Settings.getCurrentMenu()) {
+                case "main" -> MainMenu.chooseCommand();
+                case "simulation" -> SimulationMenu.chooseCommand();
+                case "workshop" -> WorkshopMenu.chooseCommand();
+                case "history" -> HistoryReportMenu.chooseCommand();
+            }
         }
     }
 }
